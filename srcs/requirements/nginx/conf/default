@@ -1,0 +1,20 @@
+server {
+    listen 443 ssl;
+    ssl_protocols TLSv1.3;
+    ssl_certificate /etc/nginx/ssl/yokamura.crt;
+    ssl_certificate_key /etc/nginx/ssl/yokamura.key;
+
+    root /var/www/html;
+    server_name yokamura.42.fr;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ [^/]\\.php(/|$) {
+        include fastcgi_params;
+        fastcgi_pass wordpress:9000;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+}
